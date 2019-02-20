@@ -1,3 +1,14 @@
 {
-  
+  "name": "heroku_hello_world",
+  "version": "1.0.0",
+  "main": "app.js",
+  "engines": {
+    "node": "8.9.3"
+  },
+  "description": "My first heroku app!",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "lightfuel",
+  "license": "GPL-3.0"
 }
