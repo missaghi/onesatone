@@ -6,7 +6,7 @@ if (port == null || port == "") {
 
 const http = require('http');
 
-const hostname = '127.0.0.1';
+const hostname = 'https://onesatone.herokuapp.com/';
 
 const server = http.createServer((req, res) => {
   res.statusCode = 200;
