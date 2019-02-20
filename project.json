@@ -1,0 +1,5 @@
+{
+  "scripts": {
+    "heroku-postbuild": "gatsby build"
+  }
+}
