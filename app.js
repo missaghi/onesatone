@@ -1,24 +1,22 @@
-let http = require('http'),
- 
-// look for PORT environment variable, 
-// else look for CLI argument,
-// else use hard coded value for port 8080
-port = process.env.PORT || process.argv[2] || 8080;
- 
-// create a simple server
-let server = http.createServer(function (req, res) {
- 
-        res.writeHead(200, {
-            'Content-Type': 'text/plain'
-        });
-        res.write('hello heroku!', 'utf-8');
-        res.end();
- 
-    });
- 
-// listen on the port
-server.listen(port, function () {
- 
-    console.log('app up on port: ' + port);
- 
-});
+var express = require('express');
+var path = require('path');
+var cookieParser = require('cookie-parser');
+var lessMiddleware = require('less-middleware');
+var logger = require('morgan');
+
+var indexRouter = require('./routes/index');
+var usersRouter = require('./routes/users');
+
+var app = express();
+
+app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(lessMiddleware(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use('/', indexRouter);
+app.use('/users', usersRouter);
+
+module.exports = app;

@@ -1,14 +1,16 @@
 {
-  "name": "heroku_hello_world",
-  "version": "1.0.0",
-  "main": "app.js",
-  "engines": {
-    "node": "8.9.3"
-  },
-  "description": "My first heroku app!",
+  "name": "onesatone",
+  "version": "0.0.0",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ./bin/www"
   },
-  "author": "lightfuel",
-  "license": "GPL-3.0"
+  "dependencies": {
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.9",
+    "express": "~4.16.0",
+    "less-middleware": "~2.2.1",
+    "morgan": "~1.9.0",
+    "pg": "^7.8.1"
+  }
 }
