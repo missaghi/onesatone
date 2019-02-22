@@ -11,7 +11,7 @@ const pool = new Pool({
 })
 
 /* GET home page. */
-router.get('/test/', function(req, res, next) {
+router.get('/lnnode/', function(req, res, next) {
  
   pool.query('SELECT * FROM lnnode', (error, results) => {
     if (error) {
