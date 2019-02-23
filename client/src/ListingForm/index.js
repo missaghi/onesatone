@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import withStyles from '@material-ui/core/styles/withStyles';
 
 import { Formik } from "formik"; 
-import { Form } from "./form";
+import Form from "./form";
 
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AppBar from '@material-ui/core/AppBar';
@@ -25,7 +25,7 @@ const styles = theme => ({
       marginRight: 'auto',
     },
   },
-  paper: {
+  paper: { 
     marginTop: theme.spacing.unit * 3,
     marginBottom: theme.spacing.unit * 3,
     padding: theme.spacing.unit * 2,
@@ -46,7 +46,9 @@ const styles = theme => ({
     marginTop: theme.spacing.unit * 3,
     marginLeft: theme.spacing.unit,
   },
+  h1: {textAlign:'center', marginLeft: 'auto', marginRight:'auto'},
 });
+
 
 class ListingForm extends React.Component {
  constructor(props) {
@@ -61,14 +63,15 @@ class ListingForm extends React.Component {
       <CssBaseline />
       <AppBar position="absolute" color="default" className={classes.appBar}>
         <Toolbar>
-          <Typography variant="h6" color="inherit" noWrap>
-            1SAT1
-          </Typography>
+          <Typography variant="h4" color="inherit" noWrap>
+            GlowSAT
+          </Typography>  
         </Toolbar>
       </AppBar>
+      <h1 className={classes.h1}>List your node</h1> 
       <main className={classes.layout}>
         <Paper className={classes.paper}>
-          <Typography component="h1" variant="h4" align="center">
+          <Typography component="h1" variant="h5" align="center">
             Get paid to open channels with other nodes
           </Typography>  
             <Formik
@@ -76,6 +79,11 @@ class ListingForm extends React.Component {
             />
           </Paper>
       </main>
+      <footer align="center">
+          <Typography variant="body1"   align="center">
+            Get paid to open channels with other nodes
+          </Typography> 
+      </footer>
     </React.Fragment>
    );
  }

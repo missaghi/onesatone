@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import ListingForm from './ListingForm/index'
+import 'typeface-roboto';
 
 class App extends Component {
   state = {lnnodes: []}
@@ -14,10 +15,9 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <h1>List your node</h1> 
 
         <ListingForm/> 
-
+From DB: 
         {this.state.lnnodes.map(lnnode =>
           <div key={lnnode.id}>{lnnode.text}</div>
         )}
