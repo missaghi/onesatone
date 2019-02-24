@@ -1,14 +1,8 @@
+const pool = require('./pgpool');
 var express = require('express');
 var router = express.Router();
 
-const Pool = require('pg').Pool
-const pool = new Pool({
-  user: 'pgadmin',
-  host: 'localhost',
-  database: 'onesatonedb',
-  password: 'olive9',
-  port: 5432,
-})
+
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
