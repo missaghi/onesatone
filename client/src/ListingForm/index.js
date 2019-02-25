@@ -11,6 +11,8 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Paper from '@material-ui/core/Paper'; 
 import Typography from '@material-ui/core/Typography';
 
+import * as Yup from "yup"
+
 const styles = theme => ({
   appBar: {
     position: 'relative',
@@ -49,6 +51,12 @@ const styles = theme => ({
   h1: {textAlign:'center', marginLeft: 'auto', marginRight:'auto'},
 });
 
+const validationSchema = Yup.object({
+  nodeID: Yup.string("Enter a node")
+  .required("Node is required"),
+  email: Yup.string("Enter your email")
+  .email("Enter a valid email")
+  .required("Email is required")});
 
 class ListingForm extends React.Component {
  constructor(props) {
@@ -58,6 +66,7 @@ class ListingForm extends React.Component {
 
  render() {
    const {classes} = this.props;
+   const values = { name: "", email: "", confirmPassword: "", password: "" };
    return (
     <React.Fragment>
       <CssBaseline />
@@ -76,6 +85,8 @@ class ListingForm extends React.Component {
           </Typography>  
             <Formik
               render={props => <Form {...props} />}
+              initialValues={values}
+              validationSchema={validationSchema}
             />
           </Paper>
       </main>

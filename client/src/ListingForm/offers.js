@@ -47,24 +47,30 @@ class Offers extends React.Component {
     this.state = {  offers : [{ size: 100000, fee: 10000 }, { size: 10000, fee: 1000}, ]};
   } 
 
-  handleRemoveOffer = idx => event => {
-    //this.setState({
-    //  [name]: event.target.value,
-    //});
+  handleRemoveOffer = idx => event => { 
     this.setState({  offers : this.state.offers.filter((s,sidx) => idx !== sidx) });
   } 
 
   handleAddOffer = event => {
-    
-    this.setState({  offers : this.state.offers.concat({size:0,fee:0}) });
+    this.setState({  offers : this.state.offers.concat({size:100000,fee:10000}) });
   } 
+
+  handleChange = (idx,name) => event => {
+    //this.props.handleChange(event); 
+    
+    this.setState({  
+      offers : this.state.offers.map((s,sidx) => {
+        if (idx==sidx) {s[name] = event.target.value} return s 
+      }) 
+    });
+  }
 
   renderCard(offer, idx, classes) {   
     return(
     <Card className={classes.card} variant="outlined" key={idx}>
-  <CardContent> 
-  <Typography component="h2" variant="h5" align="left" className={classes.inputs}>
-   Channel Offer {idx + 1}</Typography>
+    <CardContent> 
+    <Typography component="h2" variant="h5" align="left" className={classes.inputs}>
+      Channel Offer {idx + 1}</Typography>
     <TextField 
       id="size"
       select
@@ -73,6 +79,7 @@ class Offers extends React.Component {
       className={classes.inputs}
       fullWidth
       value={offer.size}
+      onChange={this.handleChange(idx, 'size')}
       SelectProps={{
         MenuProps: {
           className: classes.menu,
@@ -80,7 +87,7 @@ class Offers extends React.Component {
       }}  
     >
       {channelsizes.map(option => (
-        <MenuItem key={option.value} value={option.value}>
+        <MenuItem key={option.value} value={option.value}> 
           {option.label}
         </MenuItem>
       ))}

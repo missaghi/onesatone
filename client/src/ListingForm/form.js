@@ -25,35 +25,53 @@ const styles = theme => ({
 });
 
 class Form extends React.Component {
-  state = {  
-  };
+  constructor(props) {
+    super(props);
+    this.state = {  }
+  }  
 
-  handleChange = name => event => {
-    this.setState({
-      [name]: event.target.value,
-    });
-  };
+  change = (nodeID, e) => {
+    e.persist();  
+    this.props.handleChange(e);
+    this.props.setFieldTouched(nodeID, true, false);
+    };
 
   render() {
     const { classes } = this.props;
+    const  { values : { nodeID, email },
+    errors,
+    touched,
+    handleSubmit, 
+    isValid,
+  } = this.props;
 
     return (
-   <form onSubmit={() => {}}>
+
+   <form onSubmit={() => {
+    alert("submitted");
+  }}>
      <TextField  className={classes.inputs}
        id="nodeID"
        name="nodeID"
           variant="outlined"
        label="nodeID" 
        fullWidth
-       helperText="just the ID before the @ sign, no IP or port"
+       helperText={touched.nodeID ? errors.nodeID : "just the ID before the @ sign, no IP or port"}
+       error={touched.nodeID && Boolean(errors.nodeID)}
+       value={nodeID}
+       onChange={this.change.bind(null, "nodeID")}
      />
      <TextField  className={classes.inputs}
        id="email"
        name="email"
           variant="outlined"
        label="Email"
-       helperText="Get an email when you recieve an order"
+       helperText={touched.email ? errors.email : "Get an email when you recieve an order"}
+       error={touched.email && Boolean(errors.email)}
+       label="Email"
        fullWidth
+       value={email}
+       onChange={this.change.bind(null, "email")}
      />
 
     <Typography component="h2" variant="h6" align="left">
@@ -66,6 +84,7 @@ class Form extends React.Component {
        fullWidth
        variant="contained"
        color="primary"
+       disabled={!isValid}
      >
        Create Invoice to List your Node
      </Button>
