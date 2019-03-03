@@ -67,7 +67,10 @@ class ListingForm extends React.Component {
  }
 
  handleSubmit = vals => {
-  alert(JSON.stringify(vals));
+ 
+  
+  
+
  }
 
  render() {
