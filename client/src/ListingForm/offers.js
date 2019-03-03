@@ -43,26 +43,24 @@ const channelsizes = [
 
 class Offers extends React.Component {
   constructor(props) {
-    super(props);
-    this.state = {  offers : [{ size: 100000, fee: 10000 }, { size: 10000, fee: 1000}, ]};
-  } 
+    super(props); 
+    this.state = { offers : props.values.offers };
+  }  
 
-  handleRemoveOffer = idx => event => { 
-    this.setState({  offers : this.state.offers.filter((s,sidx) => idx !== sidx) });
+ handleRemoveOffer = idx => event => {  
+    this.setState({  offers : this.state.offers.filter((s,sidx) => idx !== sidx) }, () => this.props.offerChange(this.state.offers));
   } 
 
   handleAddOffer = event => {
-    this.setState({  offers : this.state.offers.concat({size:100000,fee:10000}) });
+    this.setState({  offers : this.state.offers.concat({size:100000,fee:10000}) }, () => this.props.offerChange(this.state.offers));
   } 
 
-  handleChange = (idx,name) => event => {
-    //this.props.handleChange(event); 
-    
+  handleChange = (idx,name) => event => { 
     this.setState({  
       offers : this.state.offers.map((s,sidx) => {
         if (idx==sidx) {s[name] = event.target.value} return s 
       }) 
-    });
+    }, () => this.props.offerChange(this.state.offers));
   }
 
   renderCard(offer, idx, classes) {   
@@ -97,6 +95,8 @@ class Offers extends React.Component {
       id="fee"  className={classes.inputs}
       name="fee"
       label="Your Fee"
+      value={offer.fee}
+      onChange={this.handleChange(idx, 'fee')}
       helperText="Suggested 10% of the Size"
       variant="outlined"
       fullWidth
@@ -120,9 +120,12 @@ class Offers extends React.Component {
           }
 
           <div  align="right">
-            <Button variant="outlined"  onClick={this.handleAddOffer}    aria-label="Add" className={classes.fab}>
-              Add Offer <AddIcon />
+            <Button variant="outlined"   onClick={this.handleAddOffer}    aria-label="Add" className={classes.fab}>
+              Add Another Offer <AddIcon /> 
             </Button>
+             {
+                JSON.stringify(this.props.errors.offers)
+              }
           </div>
         </React.Fragment>
 );

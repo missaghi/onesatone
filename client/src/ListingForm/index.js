@@ -56,7 +56,9 @@ const validationSchema = Yup.object({
   .required("Node is required"),
   email: Yup.string("Enter your email")
   .email("Enter a valid email")
-  .required("Email is required")});
+  .required("Email is required"),
+  offers: Yup.array()
+  .required("One offer required")});
 
 class ListingForm extends React.Component {
  constructor(props) {
@@ -64,9 +66,14 @@ class ListingForm extends React.Component {
    this.state = {};
  }
 
+ handleSubmit = vals => {
+  alert(JSON.stringify(vals));
+ }
+
  render() {
    const {classes} = this.props;
-   const values = { name: "", email: "", confirmPassword: "", password: "" };
+   const values = { nodeID: "", email: "", offers:  [{ size: 100000, fee: 10000 }, ] };
+   
    return (
     <React.Fragment>
       <CssBaseline />
@@ -86,7 +93,11 @@ class ListingForm extends React.Component {
             <Formik
               render={props => <Form {...props} />}
               initialValues={values}
-              validationSchema={validationSchema}
+              validationSchema={validationSchema}  
+              onSubmit={(values, actions) => {
+                this.handleSubmit(values);
+                actions.setSubmitting(false);
+                }}
             />
           </Paper>
       </main>

@@ -21,6 +21,8 @@ From DB:
         {this.state.lnnodes.map(lnnode =>
           <div key={lnnode.id}>{lnnode.text}</div>
         )}
+
+        <center>Support email info@1sat1.com</center>
       </div>
     );
   }

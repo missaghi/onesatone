@@ -27,34 +27,37 @@ const styles = theme => ({
 class Form extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {  }
+    this.state = {  } 
+
   }  
 
-  change = (nodeID, e) => {
+  change = (name, e) => { 
     e.persist();  
     this.props.handleChange(e);
-    this.props.setFieldTouched(nodeID, true, false);
-    };
+    this.props.setFieldTouched(name, true, false);
+  };
+ 
 
   render() {
     const { classes } = this.props;
-    const  { values : { nodeID, email },
-    errors,
-    touched,
-    handleSubmit, 
-    isValid,
-  } = this.props;
+    const  { values : { nodeID, email, offers },
+            errors,
+            touched,
+            handleSubmit, 
+            isValid,
+           } = this.props; 
 
     return (
 
-   <form onSubmit={() => {
-    alert("submitted");
+   <form onSubmit={(e) => {
+     handleSubmit(e);
+     e.preventDefault(); 
   }}>
      <TextField  className={classes.inputs}
        id="nodeID"
        name="nodeID"
           variant="outlined"
-       label="nodeID" 
+       label="Enter your Node ID" 
        fullWidth
        helperText={touched.nodeID ? errors.nodeID : "just the ID before the @ sign, no IP or port"}
        error={touched.nodeID && Boolean(errors.nodeID)}
@@ -65,10 +68,9 @@ class Form extends React.Component {
        id="email"
        name="email"
           variant="outlined"
-       label="Email"
+       label="Notification Email"
        helperText={touched.email ? errors.email : "Get an email when you recieve an order"}
        error={touched.email && Boolean(errors.email)}
-       label="Email"
        fullWidth
        value={email}
        onChange={this.change.bind(null, "email")}
@@ -77,7 +79,12 @@ class Form extends React.Component {
     <Typography component="h2" variant="h6" align="left">
     Add the channels you are willing to open</Typography>
 
-     <Offers /> 
+     <Offers {...this.props} offerChange={(arroffers) => {
+       var newvalues = this.props.values;
+       newvalues.offers = arroffers;
+       console.log(arroffers);
+       this.props.setValues(newvalues); 
+       }} /> 
 
      <Button
        type="submit"
