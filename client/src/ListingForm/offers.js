@@ -106,7 +106,7 @@ class Offers extends React.Component {
     /> 
   </CardContent>
   <CardActions>
-    <Button size="small" onClick={this.handleRemoveOffer(idx)} align="right">Remove Offer <MinusIcon /></Button>
+    <Button size="small" onClick={this.handleRemoveOffer(idx)} align="right" disabled={Boolean(this.state.offers.length == 1 )}>Remove Offer <MinusIcon /></Button>
   </CardActions>
 </Card> 
   )};
@@ -120,12 +120,9 @@ class Offers extends React.Component {
           }
 
           <div  align="right">
-            <Button variant="outlined"   onClick={this.handleAddOffer}    aria-label="Add" className={classes.fab}>
+            <Button variant="outlined" disabled={Boolean(this.state.offers.length > 2 )}  onClick={this.handleAddOffer}    aria-label="Add" className={classes.fab}>
               Add Another Offer <AddIcon /> 
-            </Button>
-             {
-                JSON.stringify(this.props.errors.offers)
-              }
+            </Button> 
           </div>
         </React.Fragment>
 );

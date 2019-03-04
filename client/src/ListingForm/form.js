@@ -85,7 +85,6 @@ class Form extends React.Component {
        console.log(arroffers);
        this.props.setValues(newvalues); 
        }} /> 
-
      <Button
        type="submit"
        fullWidth

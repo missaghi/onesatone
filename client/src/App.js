@@ -18,9 +18,11 @@ class App extends Component {
 
         <ListingForm/> 
 From DB: 
-        {this.state.lnnodes.map(lnnode =>
-          <div key={lnnode.id}>{lnnode.text}</div>
-        )}
+        <ul>
+          {this.state.lnnodes.map(lnnode =>
+              <li key={lnnode.id}>Node {lnnode.id}: {lnnode.nodeID}</li>
+          )}
+        </ul>
 
         <center>Support email info@1sat1.com</center>
       </div>

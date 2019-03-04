@@ -10,7 +10,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Paper from '@material-ui/core/Paper'; 
 import Typography from '@material-ui/core/Typography';
-
+import {CopyToClipboard} from 'react-copy-to-clipboard';
 import * as Yup from "yup"
 
 const styles = theme => ({
@@ -57,21 +57,36 @@ const validationSchema = Yup.object({
   email: Yup.string("Enter your email")
   .email("Enter a valid email")
   .required("Email is required"),
-  offers: Yup.array()
+  offers: Yup.array().max(3, "Only 3 offers at once")
   .required("One offer required")});
 
 class ListingForm extends React.Component {
  constructor(props) {
    super(props);
-   this.state = {};
+   this.state = { 
+      invoice : { invoice: "", img : ""} ,
+      copied: false,
+  };
  }
 
  handleSubmit = vals => {
  
+  fetch("/api/list", {
+    method: 'post',
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify(vals)
+  }).then(res => res.json())
+    .then(invoice => {
+      if (invoice.error)
+       console.log(invoice.error);
+      else 
+        this.setState({invoice : { invoice : invoice.payment_request, img : invoice.img }});
+  }).catch(function(error) {
+    console.log(error);
+  });
   
-  
-
  }
+ 
 
  render() {
    const {classes} = this.props;
@@ -102,6 +117,15 @@ class ListingForm extends React.Component {
                 actions.setSubmitting(false);
                 }}
             />
+            { (this.state.invoice.invoice.length > 0) ?  
+            <div> 
+              <div><img src={this.state.invoice.img} /> </div>
+              <CopyToClipboard text={this.state.invoice.invoice}
+                onCopy={() => this.setState({copied: true})}>
+                <span>Copy to clipboard</span>
+              </CopyToClipboard>
+              {this.state.copied ? <div><span style={{color: 'red'}}>Copied.</span></div> : null}
+            </div> : <div> </div> }
           </Paper>
       </main>
       <footer align="center">
