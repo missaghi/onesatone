@@ -1,0 +1,29 @@
+{
+  "name": "onesatone",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www",
+    "heroku-postbuild": "cd client && npm install && npm run build"
+  },
+  "dependencies": {
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.9",
+    "dotenv": "^6.2.0",
+    "express": "~4.16.0",
+    "fs": "0.0.1-security",
+    "grpc": "^1.19.0",
+    "hyperquest": "^2.1.3",
+    "jsonstream": "^1.0.3",
+    "morgan": "~1.9.0",
+    "pg": "^7.8.1",
+    "qrcode": "^1.3.3",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.4",
+    "socket.io": "^2.2.0",
+    "socket.io-stream": "^0.9.1",
+    "through2": "^3.0.1",
+    "timber": "^3.1.3",
+    "yesql": "^3.2.2"
+  }
+}
