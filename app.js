@@ -13,6 +13,7 @@ var usersRouter = require('./routes/users');
 var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
+ 
 
 //app.use(logger('dev'));
 //app.use(express.json());
@@ -25,8 +26,10 @@ app.use(express.static(path.join(__dirname, 'client/build')));
 io.on("connection", socket => {
     counter = counter+1;
     console.info("New client connected: socket", socket.id);
-    require('./routes/index')(socket);
-    require('./routes/api')(socket);
+    require('./routes/index')(socket); 
+
+    socket.on("/api/list", require('./api/list')(socket));
+
     socket.on("disconnect", () => console.info("Client disconnected: socket", socket.id));
 });
 
