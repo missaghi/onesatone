@@ -73,9 +73,9 @@ class Form extends React.Component {
        id="nodeID"
        name="nodeID"
           variant="outlined"
-       label="Enter your Node Address" 
+       label="Enter justyour Node Address (no IP or Port)" 
        fullWidth
-       helperText={touched.nodeID ? errors.nodeID : "just the ID before the @ sign, no IP or port"}
+       helperText={touched.nodeID ? errors.nodeID : "Node Address"}
        error={touched.nodeID && Boolean(errors.nodeID)}
        value={nodeID}
        onChange={this.change.bind(null, "nodeID")}
