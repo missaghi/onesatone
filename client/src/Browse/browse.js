@@ -104,10 +104,10 @@ class Browse extends React.Component {
     super(props);
     this.state = {
       open :false,
-      offerID :0,
+      listingid :0,
       invoice: { invoice: "", img: "" },
       paid: false,
-      copied: false,
+      copied: false, 
       expanded: false,
       nodes: []
     };
@@ -115,8 +115,9 @@ class Browse extends React.Component {
   }
 
   handleSubmit = vals => {
-
-    socket.emit("/api/list", vals, (invoice) => {
+  vals.listingid = this.state.listingid;
+   console.log(vals);
+    socket.emit("/api/buy", vals, (invoice) => {
       if (invoice.error) {
         console.log(invoice.error);
       }
@@ -136,12 +137,12 @@ class Browse extends React.Component {
     });
   };
 
-  openBuyDialog = offerID => () => {
-    this.setState({open:true, offerID : offerID})
+  openBuyDialog = listingid => () => {
+    this.setState({open:true, listingid : listingid})
   } 
 
   closeBuyDialog = (vals) => { 
-    this.setState({open:false, offerID : 0})
+    this.setState({open:false, listingid : 0})
   }
 
   componentDidMount() {
@@ -161,10 +162,8 @@ class Browse extends React.Component {
   render() {
     const { classes } = this.props;
     const values = {
-      nodeID: "",
-      alias: "",
-      email: "",
-      offers: [{ size: 100000, fee: 10000 }]
+      node: "",
+      email: "", 
     };
     const { expanded } = this.state;
 
@@ -174,7 +173,7 @@ class Browse extends React.Component {
         <main>
 
           <Formik
-            render={props => <Buy {...props} open={this.state.open} handleClose={this.closeBuyDialog} buttonValue={this.state.buttonValue} />}
+            render={props => <Buy {...props} invoice={this.state.invoice} open={this.state.open} handleClose={this.closeBuyDialog}  />}
             initialValues={values}
             validationSchema={validationSchema}
             onSubmit={(values, actions) => {
@@ -216,13 +215,13 @@ class Browse extends React.Component {
                         {node.size}
                       </Typography>
 
-                      {"Open Fee"}
+                      {"Open Fee (site fee + channel fee)"}
                       <Typography align="left" className={classes.attribute}>
-                        {node.fee}
+                        {10000 + Number(node.fee)}
                       </Typography>
 
                       <Button size="small" variant="contained" color="primary" fullWidth onClick={this.openBuyDialog(idx)} >Buy</Button>
- 
+
                     </div>
                   </ExpansionPanelDetails>
                 </ExpansionPanel>

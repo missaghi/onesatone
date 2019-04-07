@@ -26,7 +26,6 @@ class Buy extends React.Component {
     this.state = {
       open: props.open,
       button: { msg: "Create invoice to contact seller", disabled: false },
-      invoice: { invoice: "", img: "" },
       paid: false,
       copied: false,
     };
@@ -36,7 +35,7 @@ class Buy extends React.Component {
       this.setState({ paid: data });
     });
 
-    socket.on("buy/update", data => {
+    socket.on("update", data => {
       console.log(data);
       this.setState({ button: data });
     });
@@ -50,7 +49,7 @@ class Buy extends React.Component {
 
   handleClose = () => {
 
-    alert(Object.keys(this.props.touched).length);
+    //alert(Object.keys(this.props.touched).length);
 
     this.props.handleClose();
   }
@@ -63,12 +62,14 @@ class Buy extends React.Component {
       touched,
       handleSubmit,
       isValid,
+      invoice,
       open
     } = this.props;
 
 
     return (
       <form onSubmit={(e) => {
+        console.log("form");
         handleSubmit(e);
         e.preventDefault();
       }}>
@@ -80,7 +81,7 @@ class Buy extends React.Component {
           <DialogTitle id="form-dialog-title">Buy Offer</DialogTitle>
           <DialogContent>
             <DialogContentText>
-            What email should the seller send the invoice to?
+            What email should the seller send the channel invoice to?
              
             </DialogContentText>
             <div>
@@ -92,7 +93,7 @@ class Buy extends React.Component {
                 variant="outlined"
                 label="Email Address"
                 fullWidth
-                helperText={touched.email ? errors.email : "Seller will contact you with invoice"}
+                helperText={touched.email ? errors.email : "Seller will contact you with invoice for the fee"}
                 error={touched.email && Boolean(errors.email)}
                 value={email}
                 onChange={this.change.bind(null, "email")}
@@ -111,13 +112,13 @@ class Buy extends React.Component {
                 onChange={this.change.bind(null, "nodeID")}
               />
             </div>
-            {this.state.invoice.invoice.length > 0 ? (
+            {invoice.invoice.length > 0 ? (
               <div>
                 <div>
-                  <img src={this.state.invoice.img} />
+                  <img src={invoice.img} />
                 </div>
                 <CopyToClipboard
-                  text={this.state.invoice.invoice}
+                  text={invoice.invoice}
                   onCopy={() => this.setState({ copied: true })}
                 >
                   <span> Copy to clipboard </span>
@@ -138,6 +139,7 @@ class Buy extends React.Component {
               Cancel
             </Button>
             <Button
+             onClick={handleSubmit} 
               type="submit"
               fullWidth
               variant="contained"

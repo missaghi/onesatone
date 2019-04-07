@@ -5,22 +5,18 @@ var lightning = require("../../common/lightning");
 
 module.exports = socket => (data, fn) => {
 
-    try {
-        socket.emit("update", { msg: "fetching invoice", disabled: true });
-        //get invoice 
-        lightning.addInvoice({
-            //memo: "listing node", //req.body.memo,
-            value: data.fee
-        }, (err, body) => {
-            if (err) {
-                errorOut(err, false, "Retry");
-            } else {
-                CompleteCharge(body);
-            }
-        })
-    } catch (e) {
-        errorOut(e, false, "Retry");
-    }
+    socket.emit("update", { msg: "fetching invoice", disabled: true });
+    //get invoice 
+    lightning.addInvoice({
+        //memo: "listing node", //req.body.memo,
+        value: data.fee
+    }, (err, body) => {
+        if (err) {
+            errorOut(err, false, "Retry");
+        } else {
+            CompleteCharge(body);
+        }
+    })
 
     function errorOut(err, disabled, updatemsg) {
         console.log("log: " + JSON.stringify(err));
