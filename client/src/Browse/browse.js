@@ -4,12 +4,11 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import Button from '@material-ui/core/Button';
 import { Formik } from "formik";
 import * as Yup from "yup";
+import moment from "moment";
 
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import Grid from '@material-ui/core/Grid';
-
+import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
+import Badge from '@material-ui/core/Badge';
+import Chip from '@material-ui/core/Chip';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
@@ -188,8 +187,22 @@ class Browse extends React.Component {
               {this.state.nodes.map((node, idx) => (
                 <ExpansionPanel key={idx} expanded={expanded === 'node' + idx} onChange={this.handleChange('node' + idx)}>
                   <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography className={classes.heading}>{node.alias}</Typography>
-                    {/*<Typography className={classes.secondaryHeading}>{node.fee}</Typography>*/}
+                 
+                    
+                    
+                    { moment.duration(moment(node.paid).diff(moment())).as('Hours') < 24 ? 
+                    <Badge className={classes.margin} badgeContent="New" color=""><Typography className={classes.heading}>{node.alias}</Typography> </Badge> : 
+                    <Typography className={classes.heading}>{node.alias}</Typography>  }
+
+                    { (node.chanopenpending) == true ? <Chip label="Pending" color="secondary" className={classes.chip} /> : "" }
+
+                   {/*} <Badge className={classes.margin} badgeContent={0} color="primary">
+                      <VerifiedUserIcon />
+                    </Badge> */}
+                     
+                    <Typography align="right" className={classes.heading}>{node.chansize} {node.fee}</Typography> 
+                    
+                    
                   </ExpansionPanelSummary>
                   <ExpansionPanelDetails>
                     <div className={classes.panelContents}>

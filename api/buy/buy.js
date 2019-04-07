@@ -85,10 +85,13 @@ module.exports = socket => (data, fn) => {
 
                                 client.sendEmail({
                                     "From": "Info@glowsat.com",
-                                    "To": "info@glowsat.com", // res2.email
+                                    "To": res2.email,
                                     "Subject": "Channel open request",
                                     "TextBody": "You've got a real actaul customer! Please send an invoice to " + data.email + " for " + res2.fee + 
-                                    " SAT becasue they would like to pay you to open a "+ res2.chansize +" SAT channel with node (pubkey) " + data.node + " \n\n Thanks for listing on www.GlowSAT.com"
+                                    " SAT becasue they would like to pay you to open a "+ res2.chansize +" SAT channel with node (pubkey) " + data.node +
+                                    "\n\n When you have been paid and opened the channel the site should detect the channel and allow more buyers for your node, if it still says pending reply to this email with the channel ID." + 
+                                    " \n\n Thanks for listing on www.GlowSAT.com" 
+
                                 });
                             });
 

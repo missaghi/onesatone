@@ -19,15 +19,16 @@ io.on("connection", socket => {
     socket.on("/api/list", require('./api/list/list')(socket));
     socket.on("/api/browse", require('./api/buy/browse')(socket));
     socket.on("/api/buy", require('./api/buy/buy')(socket));
-    subscribe();
     socket.on("disconnect", () => console.info("Client disconnected: socket", socket.id));
+    if (!runOnce) { runOnce = true;  subscribe();}
 });
 
 //subscribe to channel graph and save all new edges to check for new channels
-
+var runOnce = false;
 var listening = false;
 
 function subscribe() {
+
     if (!listening) {
 
         listening = true;
@@ -44,10 +45,13 @@ function subscribe() {
         call.on('end', function () {
             listening = false;
             subscribe();
-        }); 
+        });
+
     }
-    console.timeLog("heartbeat");
+
+    console.log("heartbeat" + new Date().toString());
     setTimeout(subscribe, 5000);
+
 }
 
 var counter = 0;
