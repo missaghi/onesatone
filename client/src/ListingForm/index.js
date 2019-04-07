@@ -51,14 +51,13 @@ const styles = theme => ({
 });
 
 const validationSchema = Yup.object({
-  nodeID: Yup.string("Enter a node").required("Node is required"),
+  node: Yup.string("Enter a node").required("Node is required"),
   alias: Yup.string("Enter an alias").required("Give your node a name, something unique"),
+  fee: Yup.number("Enter a fee").required("Like 10% of the channel?"),
+  chansize: Yup.number("Select a channel size").required("However much you want offer"),
   email: Yup.string("Enter your email")
     .email("Enter a valid email")
-    .required("Email is required"),
-  offers: Yup.array()
-    .max(1, "Sorry only 1 offer supported right now")
-    .required("One offer required")
+    .required("Email is required")
 });
 
 class ListingForm extends React.Component {
@@ -75,9 +74,8 @@ class ListingForm extends React.Component {
     });
   }
 
-  handleSubmit = vals => {
-
-    socket.emit("/api/list", vals, (invoice) => {
+  handleSubmit = vals => { 
+   socket.emit("/api/list", vals, (invoice) => {
       if (invoice.error) {
         console.log(invoice.error);
       }
@@ -88,16 +86,16 @@ class ListingForm extends React.Component {
         });
       }
     }) 
-
   };
 
   render() {
     const { classes } = this.props;
     const values = {
-      nodeID: "",
+      node: "",
       alias: "",
       email: "",
-      offers: [{ size: 100000, fee: 10000 }]
+      fee: undefined,
+      chansize: undefined,
     };
 
     return (

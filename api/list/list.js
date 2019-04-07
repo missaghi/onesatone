@@ -5,18 +5,22 @@ var lightning = require("../../common/lightning");
 
 module.exports = socket => (data, fn) => {
 
-    socket.emit("update", { msg: "fetching invoice", disabled: true });
-    //get invoice 
-    lightning.addInvoice({
-        //memo: "listing node", //req.body.memo,
-        value: fee
-    }, (err, body) => {
-        if (err) {
-            errorOut(err, false, "Retry");
-        } else {
-            CompleteCharge(fee, body);
-        }
-    })
+    try {
+        socket.emit("update", { msg: "fetching invoice", disabled: true });
+        //get invoice 
+        lightning.addInvoice({
+            //memo: "listing node", //req.body.memo,
+            value: data.fee
+        }, (err, body) => {
+            if (err) {
+                errorOut(err, false, "Retry");
+            } else {
+                CompleteCharge(body);
+            }
+        })
+    } catch (e) {
+        errorOut(e, false, "Retry");
+    }
 
     function errorOut(err, disabled, updatemsg) {
         console.log("log: " + JSON.stringify(err));
@@ -29,18 +33,18 @@ module.exports = socket => (data, fn) => {
         });
     }
 
-    function CompleteCharge(fee, body) {
+    function CompleteCharge(body) {
         socket.emit("update", { msg: "Inserting record in DB", disabled: true });
-        const query = 'insert into listing(node, fee, email, invoice, chansize, hash, alias) VALUES(:node, :fee, :email, :invoice, :chansize, :hash, :alias) RETURNING id';
+        const query = 'insert into listing(node, fee, email, chansize, hash, alias) VALUES(:node, :fee, :email, :chansize, :hash, :alias) RETURNING id';
         const values = {
             node: data.nodeID,
             email: data.email,
             fee: data.fee,
-            size: data.chansize,
+            chansize: data.chansize,
             alias: data.alias,
             hash: JSON.stringify(body.r_hash),
         };
-        
+
         pool.query(named(query)(values), (error, dbresult) => {
             if (error) {
                 errorOut(error, false, "Retry");
@@ -51,15 +55,15 @@ module.exports = socket => (data, fn) => {
                     socket.emit("update", { msg: "Pay invoice below in 60min to continue: " + fee + "SAT", disabled: true });
 
                     var timeout = expireInvoice(call);
-                    var call = subscribeToSettlement(dbresult, timeout);
+                    var call = subscribeToSettlement(dbresult.rows[0].id, timeout, body.add_index, body.payment_request);
                 });
             }
         });
     }
 
-    function subscribeToSettlement(dbresult, timeout) {
+    function subscribeToSettlement(record, timeout, index, payment_request) {
         var ops = {
-            add_index: body.add_index - 1,
+            add_index: index - 1,
             settle_index: 0,
         };
 
@@ -67,9 +71,9 @@ module.exports = socket => (data, fn) => {
         call.on('data', function (response) {
             // A response was received from the server.
             console.info('settled' + response.settled + ' ' + response.settle_index);
-            if (response.payment_request == body.payment_request && response.settled) {
+            if (response.payment_request == payment_request && response.settled) {
                 socket.emit("update", { msg: "Paid! Updating DB", disabled: true });
-                pool.query({ text: "update listing set paid = now() where id = $1", values: [dbresult.rows[0].id] })
+                pool.query({ text: "update listing set paid = now() where id = $1", values: [record] })
                     .then(res => {
                         console.info(res.rows[0]);
                         socket.emit("update", { msg: "Listed!", disabled: false });

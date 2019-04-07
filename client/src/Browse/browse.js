@@ -203,7 +203,7 @@ class Browse extends React.Component {
 
                       {"Node Address"}
                       <Typography align="left" className={classes.attribute}>
-                        {node.nodeID}
+                        {node.node}
                       </Typography>
 
                       {"More node data"}
@@ -211,28 +211,18 @@ class Browse extends React.Component {
                         <a target="_blank" href={'https://1ml.com/node/' + node.nodeID}>View on 1ml</a>
                       </Typography>
 
-                      {"Offers"}
+                      {"Channel Size"}
+                      <Typography align="left" className={classes.attribute}>
+                        {node.size}
+                      </Typography>
 
-                      <Grid container spacing={40} className={classes.grid}>
+                      {"Open Fee"}
+                      <Typography align="left" className={classes.attribute}>
+                        {node.fee}
+                      </Typography>
 
-                        {node.offers.map((card, cardIdx) => (
-                          <Grid item key={idx + 'card' + cardIdx}>
-                            <Card className={classes.card}>
-                              <CardContent>
-                                <Typography variant="h5" component="h2">
-                                  {card.size}
-                                </Typography>
-                                <Typography className={classes.pos} color="textSecondary">
-                                  Fee: {card.fee}
-                                </Typography>
-                              </CardContent>
-                              <CardActions>
-                                <Button size="small" variant="contained" color="primary" fullWidth onClick={this.openBuyDialog(idx)} >Buy</Button>
-                              </CardActions>
-                            </Card>
-                          </Grid>
-                        ))}
-                      </Grid>
+                      <Button size="small" variant="contained" color="primary" fullWidth onClick={this.openBuyDialog(idx)} >Buy</Button>
+ 
                     </div>
                   </ExpansionPanelDetails>
                 </ExpansionPanel>
