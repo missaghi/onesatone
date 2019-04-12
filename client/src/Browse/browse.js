@@ -92,7 +92,7 @@ const styles = theme => ({
 });
 
 const validationSchema = Yup.object({
-  nodeID: Yup.string("Enter a node").required("Node is required"),
+  node: Yup.string("Enter a node").required("Node is required"),
   email: Yup.string("Enter your email")
     .email("Enter a valid email")
     .required("Email is required")
@@ -190,19 +190,23 @@ class Browse extends React.Component {
                  
                     
                     
-                    { moment.duration(moment(node.paid).diff(moment())).as('Hours') < 24 ? 
-                    <Badge className={classes.margin} badgeContent="New" color=""><Typography className={classes.heading}>{node.alias}</Typography> </Badge> : 
-                    <Typography className={classes.heading}>{node.alias}</Typography>  }
+                    {/* moment.duration(moment().diff(moment(node.paid))).as('Hours') < 24 ? 
+                    <Badge className={classes.margin} badgeContent="New" color="default">
+                    <Typography className={classes.heading}>{node.alias}</Typography> 
+                    </Badge> 
+                    : */
+                    <Typography className={classes.heading}>{node.alias}</Typography>   }
 
-                    { (node.chanopenpending) == true ? <Chip label="Pending" color="secondary" className={classes.chip} /> : "" }
+                    <Typography align="right" className={classes.heading}>{node.chansize} {10000 + Number(node.fee)} {node.sales}</Typography> 
 
                    {/*} <Badge className={classes.margin} badgeContent={0} color="primary">
                       <VerifiedUserIcon />
                     </Badge> */}
                      
-                    <Typography align="right" className={classes.heading}>{node.chansize} {node.fee}</Typography> 
                     
+                    { (!!node.chanopenpending) ? <Chip align="right" label="Pending" color="secondary" className={classes.chip} /> : "" }
                     
+
                   </ExpansionPanelSummary>
                   <ExpansionPanelDetails>
                     <div className={classes.panelContents}>
@@ -210,8 +214,17 @@ class Browse extends React.Component {
                       {"Name"}
                       <Typography align="left" className={classes.attribute}>
                         {node.alias}
-                      </Typography>
+                      </Typography> 
 
+                      {"Sales"}
+                      <Typography align="left" className={classes.attribute}>
+                        {node.sales}
+                      </Typography> 
+
+                      {"Created"}
+                      <Typography align="left" className={classes.attribute}>
+                        {moment(node.paid).fromNow()}
+                      </Typography>
 
                       {"Node Address"}
                       <Typography align="left" className={classes.attribute}>
@@ -220,12 +233,12 @@ class Browse extends React.Component {
 
                       {"More node data"}
                       <Typography align="left" className={classes.attribute}>
-                        <a target="_blank" href={'https://1ml.com/node/' + node.nodeID}>View on 1ml</a>
+                        <a target="_blank" href={'https://1ml.com/node/' + node.node}>View on 1ml</a>
                       </Typography>
 
                       {"Channel Size"}
                       <Typography align="left" className={classes.attribute}>
-                        {node.size}
+                        {node.chansize}
                       </Typography>
 
                       {"Open Fee (site fee + channel fee)"}
@@ -233,7 +246,7 @@ class Browse extends React.Component {
                         {10000 + Number(node.fee)}
                       </Typography>
 
-                      <Button size="small" variant="contained" color="primary" fullWidth onClick={this.openBuyDialog(idx)} >Buy</Button>
+                      <Button size="small" variant="contained" color="primary" fullWidth disabled={!!node.chanopenpending} onClick={this.openBuyDialog(node.id)} >Buy</Button>
 
                     </div>
                   </ExpansionPanelDetails>

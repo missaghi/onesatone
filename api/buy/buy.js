@@ -32,28 +32,38 @@ module.exports = socket => (data, fn) => {
 
     function CompleteCharge(body) {
         socket.emit("update", { msg: "Inserting record in DB", disabled: true });
-        const query = 'insert into buy(node, listingid, email, hash)' +
-            'VALUES(:node, :listingid, :email, :hash) RETURNING id';
-        const values = {
-            node: data.node,
-            email: data.email,
-            listingid: data.listingid,
-            hash: JSON.stringify(body.r_hash),
-        };
 
-        pool.query(named(query)(values), (error, dbresult) => {
-            if (error) {
-                errorOut(error, false, "Retry");
-            }
-            else {
-                qrcode.toDataURL(body.payment_request).then(qrimg => {
-                    fn({ payment_request: body.payment_request, img: qrimg });
-                    socket.emit("update", { msg: "Pay invoice in 60min to contact the seller : " + 10000 + "SAT", disabled: true });
+        pool.query({ text: "select chansize from listing where id = $1", values: [data.listingid] }).then(res => {
 
-                    var timeout = expireInvoice(call);
-                    var call = subscribeToSettlement(dbresult.rows[0].id, timeout, body.add_index, body.payment_request);
+            if (res.rowCount > 0) {
+                const query = 'insert into buy(node, listingid, email, hash, chansize)' +
+                    'VALUES(:node, :listingid, :email, :hash, :chansize) RETURNING id';
+                const values = {
+                    node: data.node,
+                    email: data.email,
+                    chansize: res.rows[0].chansize,
+                    listingid: data.listingid,
+                    hash: JSON.stringify(body.r_hash),
+                };
+
+                pool.query(named(query)(values), (error, dbresult) => {
+                    if (error) {
+                        errorOut(error, false, "Retry");
+                    }
+                    else {
+                        qrcode.toDataURL(body.payment_request).then(qrimg => {
+                            fn({ payment_request: body.payment_request, img: qrimg });
+                            socket.emit("update", { msg: "Pay invoice in 60min to contact the seller : " + 10000 + "SAT", disabled: true });
+
+                            var timeout = expireInvoice(call);
+                            var call = subscribeToSettlement(dbresult.rows[0].id, timeout, body.add_index, body.payment_request);
+                        });
+                    }
                 });
+            } else {
+                //sorry this listing no longer available
             }
+
         });
     }
 
@@ -70,12 +80,12 @@ module.exports = socket => (data, fn) => {
             if (response.payment_request == payment_request && response.settled) {
                 socket.emit("update", { msg: "Paid! Updating DB", disabled: true });
 
-                pool.query({ text: "update buy set paid = now() where id = $1", values: [record] }).then(res => {
-
-                    pool.query({ text: "update listing set orderinvoicepending = now() where id = $1", values: [data.id] })
+                    pool.query({ text: "update listing set chanopenpending = now() where id = $1", values: [data.listingid] })
                         .then(res1 => {
 
-                            pool.query({ text: "select * from listing where id = $1", values: [data.id] }).then(res2 => {
+                            pool.query({ text: "select * from listing where id = $1", values: [data.listingid] }).then(res2 => {
+
+                                pool.query({ text: "update buy set paid = now(), listingnode = $2, chansize=$3 where id = $1", values: [record, res2.rows[0].node, res2.rows[0].chansize] }).then(res => {
 
                                 // Require:
                                 var postmark = require("postmark");
@@ -85,12 +95,12 @@ module.exports = socket => (data, fn) => {
 
                                 client.sendEmail({
                                     "From": "Info@glowsat.com",
-                                    "To": res2.email,
+                                    "To": res2.rows[0].email,
                                     "Subject": "Channel open request",
-                                    "TextBody": "You've got a real actaul customer! Please send an invoice to " + data.email + " for " + res2.fee + 
-                                    " SAT becasue they would like to pay you to open a "+ res2.chansize +" SAT channel with node (pubkey) " + data.node +
-                                    "\n\n When you have been paid and opened the channel the site should detect the channel and allow more buyers for your node, if it still says pending reply to this email with the channel ID." + 
-                                    " \n\n Thanks for listing on www.GlowSAT.com" 
+                                    "TextBody": "You've got a real actaul customer! Please send an invoice to " + data.email + " for " + res2.rows[0].fee +
+                                        " SAT becasue they would like to pay you to open a " + res2.rows[0].chansize + " SAT channel with node (pubkey) " + data.node +
+                                        "\n\n When you have been paid and opened the channel the site should detect the channel and allow more buyers for your node, if it still says pending reply to this email with the channel ID." +
+                                        " \n\n Thanks for listing on www.GlowSAT.com"
 
                                 });
                             });

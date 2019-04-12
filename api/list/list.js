@@ -33,7 +33,7 @@ module.exports = socket => (data, fn) => {
         socket.emit("update", { msg: "Inserting record in DB", disabled: true });
         const query = 'insert into listing(node, fee, email, chansize, hash, alias) VALUES(:node, :fee, :email, :chansize, :hash, :alias) RETURNING id';
         const values = {
-            node: data.nodeID,
+            node: data.node.split("@")[0],
             email: data.email,
             fee: data.fee,
             chansize: data.chansize,
@@ -48,7 +48,7 @@ module.exports = socket => (data, fn) => {
             else {
                 qrcode.toDataURL(body.payment_request).then(qrimg => {
                     fn({ payment_request: body.payment_request, img: qrimg });
-                    socket.emit("update", { msg: "Pay invoice below in 60min to continue: " + fee + "SAT", disabled: true });
+                    socket.emit("update", { msg: "Pay invoice below in 60min to continue: " + data.fee + "SAT", disabled: true });
 
                     var timeout = expireInvoice(call);
                     var call = subscribeToSettlement(dbresult.rows[0].id, timeout, body.add_index, body.payment_request);

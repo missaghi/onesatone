@@ -57,7 +57,7 @@ class Buy extends React.Component {
   render() {
 
     const { classes } = this.props;
-    const { values: { nodeID, email },
+    const { values: { node, email },
       errors,
       touched,
       handleSubmit,
@@ -101,15 +101,15 @@ class Buy extends React.Component {
 
               <TextField
                 className={classes.inputs}
-                id="nodeID"
-                name="nodeID"
+                id="node"
+                name="node"
                 variant="outlined"
                 label="Your Node Address"
                 fullWidth
-                helperText={touched.nodeID ? errors.nodeID : "1234XYZ@192.168.1.123:9735"}
-                error={touched.nodeID && Boolean(errors.nodeID)}
-                value={nodeID}
-                onChange={this.change.bind(null, "nodeID")}
+                helperText={touched.node ? errors.node : "1234XYZ@192.168.1.123:9735"}
+                error={touched.node && Boolean(errors.node)}
+                value={node}
+                onChange={this.change.bind(null, "node")}
               />
             </div>
             {invoice.invoice.length > 0 ? (
