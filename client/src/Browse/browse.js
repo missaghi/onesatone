@@ -6,6 +6,7 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import moment from "moment";
 import AlertDialog from "./thankyou";
+import TextField from "@material-ui/core/TextField";
 
 
 import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
@@ -67,7 +68,7 @@ const styles = theme => ({
   h1: { textAlign: "center", marginLeft: "auto", marginRight: "auto" },
   heading: {
     fontSize: theme.typography.pxToRem(18),
-    flexBasis: '33.33%',
+    flexBasis: '66.66%',
     flexShrink: 0,
   },
   secondaryHeading: {
@@ -208,7 +209,7 @@ class Browse extends React.Component {
                     : */
                     <Typography color={(!!node.chanopenpending) ? 'secondary' : 'default'} className={classes.heading}>{node.alias}</Typography>   }
 
-                    <Typography align="right" className={classes.heading}>{node.chansize} {10000 + Number(node.fee)} {node.sales}</Typography> 
+                    <Typography align="right" className={classes.secondaryHeading}><b>⚡{node.chansize}</b> &nbsp; ⚡{10000 + Number(node.fee)} &nbsp; ⭐{node.sales}</Typography> 
 
                    {/*} <Badge className={classes.margin} badgeContent={0} color="primary">
                       <VerifiedUserIcon />
@@ -230,24 +231,18 @@ class Browse extends React.Component {
                         {node.alias}
                       </Typography> 
 
-                      {"Sales"}
-                      <Typography align="left" className={classes.attribute}>
-                        {node.sales}
-                      </Typography> 
-
                       {"Created"}
                       <Typography align="left" className={classes.attribute}>
                         {moment(node.paid).fromNow()}
                       </Typography>
 
                       {"Node Address"}
-                      <Typography align="left" className={classes.attribute}>
-                        {node.node}
-                      </Typography>
+                      <TextField align="left" className={classes.attribute} variant="standard" 
+                      fullWidth value={node.node} disabled={true} /> 
 
                       {"More node data"}
                       <Typography align="left" className={classes.attribute}>
-                        <a target="_blank" href={'https://1ml.com/node/' + node.node}>View on 1ml</a>
+                        <a target="_blank" href={'https://1ml.com/node/' + node.node}>View on 1ML</a>
                       </Typography>
 
                       {"Channel Size"}
@@ -255,10 +250,15 @@ class Browse extends React.Component {
                         {node.chansize}
                       </Typography>
 
-                      {"Open Fee (site fee + channel fee)"}
+                      {"Open Fee (site fee 10kSAT + channel fee " + node.fee + " )"}
                       <Typography align="left" className={classes.attribute}>
                         {10000 + Number(node.fee)}
                       </Typography>
+
+                      {"Sales"}
+                      <Typography align="left" className={classes.attribute}>
+                        {node.sales}
+                      </Typography> 
 
                       <Button size="small" variant="contained" color="primary" fullWidth disabled={!!node.chanopenpending} onClick={this.openBuyDialog(node.id)} >Buy</Button>
 

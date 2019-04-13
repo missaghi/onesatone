@@ -101,7 +101,7 @@ class App extends Component {
           <nav>
             <Button color="primary" component={props => <Link to="list" {...props}/>}> List </Button>
             <Button color="primary" component={props => <Link to="browse" {...props}/>}> Browse </Button>
-            <Button color="primary" component={props => <Link to="support" {...props}/>}> Support </Button>
+            <Button color="primary" component={props => <Link to="support" {...props}/>}> FAQ </Button>
           </nav>
             </Toolbar>
           </AppBar> 
