@@ -112,5 +112,3 @@ $RECYCLE.BIN/
 lib/
 data/
 
-# CERTS
-tls.*
