@@ -5,6 +5,8 @@ import Button from '@material-ui/core/Button';
 import { Formik } from "formik";
 import * as Yup from "yup";
 import moment from "moment";
+import AlertDialog from "./thankyou";
+
 
 import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 import Badge from '@material-ui/core/Badge';
@@ -111,6 +113,11 @@ class Browse extends React.Component {
       nodes: []
     };
 
+    socket.on("paid", data => {
+      console.log("paid");
+      this.setState({paid:true});
+    }); 
+
   }
 
   handleSubmit = vals => {
@@ -158,6 +165,8 @@ class Browse extends React.Component {
     })
   }
 
+  handleCloseBuy = () => { this.setState({open:false}); }
+
   render() {
     const { classes } = this.props;
     const values = {
@@ -170,6 +179,8 @@ class Browse extends React.Component {
       <React.Fragment>
         <CssBaseline />
         <main>
+
+        <AlertDialog open={this.state.paid} close={this.handleCloseBuy}></AlertDialog>
 
           <Formik
             render={props => <Buy {...props} invoice={this.state.invoice} open={this.state.open} handleClose={this.closeBuyDialog}  />}
@@ -195,7 +206,7 @@ class Browse extends React.Component {
                     <Typography className={classes.heading}>{node.alias}</Typography> 
                     </Badge> 
                     : */
-                    <Typography className={classes.heading}>{node.alias}</Typography>   }
+                    <Typography color={(!!node.chanopenpending) ? 'secondary' : 'default'} className={classes.heading}>{node.alias}</Typography>   }
 
                     <Typography align="right" className={classes.heading}>{node.chansize} {10000 + Number(node.fee)} {node.sales}</Typography> 
 
@@ -204,12 +215,15 @@ class Browse extends React.Component {
                     </Badge> */}
                      
                     
-                    { (!!node.chanopenpending) ? <Chip align="right" label="Pending" color="secondary" className={classes.chip} /> : "" }
+                    { /*(!!node.chanopenpending) ? <Chip align="right" label="Pending" color="secondary" className={classes.chip} /> : "" */}
                     
 
                   </ExpansionPanelSummary>
                   <ExpansionPanelDetails>
                     <div className={classes.panelContents}>
+
+                    { /*(!!node.chanopenpending) ? <Chip align="right" label="Pending order" color="secondary" className={classes.chip} /> : "" */}
+
 
                       {"Name"}
                       <Typography align="left" className={classes.attribute}>

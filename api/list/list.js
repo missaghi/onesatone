@@ -72,7 +72,7 @@ module.exports = socket => (data, fn) => {
                 pool.query({ text: "update listing set paid = now() where id = $1", values: [record] })
                     .then(res => {
                         console.info(res.rows[0]);
-                        socket.emit("update", { msg: "Listed!", disabled: false });
+                        socket.emit("listed");
                     })
                     .catch(e => console.error(e.stack));
             }

@@ -124,7 +124,7 @@ class Form extends React.Component {
       }}  
     >
       {channelsizes.map(option => (
-        <option  key={option.value} value={option.value}> 
+        <option  key={option.value || 0} value={option.value}> 
           {option.label}
         </option>
       ))}

@@ -51,7 +51,10 @@ const styles = theme => ({
     marginLeft: theme.spacing.unit
   },
   footer: {marginTop: theme.spacing.unit * 3,},
-  logo: {textDecoration:"none"}
+  logo: {textDecoration:"none",
+  height:"40pt",
+  verticalAlign: "middle",
+}
 });
 
 
@@ -93,7 +96,7 @@ class App extends Component {
           <AppBar position="static" color="default" className={classes.appBar}>
             <Toolbar>
               <Typography  variant="h6" align="left" color="inherit"  component={props => <Link  to="/" {...props}/>} noWrap className={classes.toolbarTitle}>
-              GlowSAT
+              GlowSAT <img src="logo.png" className={classes.logo}  />
           </Typography>
           <nav>
             <Button color="primary" component={props => <Link to="list" {...props}/>}> List </Button>

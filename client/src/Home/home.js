@@ -18,16 +18,22 @@ import classNames from 'classnames';
 
 const styles = theme => ({
   
-    heroUnit: {
-        backgroundColor: theme.palette.background.paper,
+    heroUnit: { 
+        backgroundColor: theme.palette.background.paper, 
       },
       appBar: {
     position: "relative"
   },
-  heroContent: {
-    maxWidth: 600,
+  heroContent: { 
+    maxWidth: 600, 
+        backgroundImage: 'url(hero.png)',
+        backgroundSize: "contain",
+        backgroundRepeat: "no-repeat",
     margin: '0 auto',
     padding: `${theme.spacing.unit * 8}px 0 ${theme.spacing.unit * 6}px`,
+  },
+  heroImg: {
+    paddingTop:"75%", maxHeight:"400px",
   },
   heroButtons: {
     marginTop: theme.spacing.unit * 4,
@@ -122,9 +128,7 @@ render() {
         {/* Hero unit */}
         <div className={classes.heroUnit}>
           <div className={classes.heroContent}>
-            <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
-              GlowSAT 
-            </Typography>
+             <div className={classes.heroImg}></div>
             <Typography variant="h6" align="center" color="textSecondary" paragraph>
             Sell channels to grow the Lighting Network's liquidity and stack a few SATs or buys some channels to bootstrap your netowork. 
             </Typography>

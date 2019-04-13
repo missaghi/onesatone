@@ -4,6 +4,7 @@ import withStyles from "@material-ui/core/styles/withStyles";
 
 import { Formik } from "formik";
 import Form from "./form";
+import AlertDialog from "./thankyou";
 
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Paper from "@material-ui/core/Paper";
@@ -51,7 +52,7 @@ const styles = theme => ({
 });
 
 const validationSchema = Yup.object({
-  node: Yup.string("Enter a node").required("Node is required"),
+  node: Yup.string("Enter a node").required("Node is required").min(66,"pubkey's are usually 66 charachters long").max(66, "Seems too long, try to trim everything after the @ sign."),
   alias: Yup.string("Enter an alias").required("Give your node a name, something unique"),
   fee: Yup.number("Enter a fee").required("Like 10% of the channel?"),
   chansize: Yup.number("Select a channel size").required("However much you want offer"),
@@ -64,15 +65,18 @@ class ListingForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      open:false,
       invoice: { invoice: "", img: "" },
       paid: false,
       copied: false,
     };
-    socket.on("Paid", data => {
-      console.log(data);
-      this.setState({ paid: data });
-    });
+    socket.on("listed", data => {
+      console.log("Listed");
+      this.setState({open:true});
+    }); 
   }
+
+  handleClose = () => { this.setState({open:false}); }
 
   handleSubmit = vals => { 
    socket.emit("/api/list", vals, (invoice) => {
@@ -94,7 +98,7 @@ class ListingForm extends React.Component {
       node: "",
       alias: "",
       email: "",
-      fee: undefined,
+      fee: 10000,
       chansize: undefined,
     };
 
@@ -102,6 +106,8 @@ class ListingForm extends React.Component {
       <React.Fragment>
         <CssBaseline />
         
+        <AlertDialog open={this.state.open} close={this.handleClose}></AlertDialog>
+
         <h1 className={classes.h1}> List your node </h1>
         <main className={classes.layout}>
           <Paper className={classes.paper}>
