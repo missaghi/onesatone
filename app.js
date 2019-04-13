@@ -9,12 +9,16 @@ var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server); 
 var scanner = require('./channels/scanner')();
-app.use(express.static(path.join(__dirname, 'client/build')));
+
 
 var redirectToHTTPS = require('express-http-to-https').redirectToHTTPS
  
 // Don't redirect if the hostname is `localhost:port` or the route is `/insecure`
 app.use(redirectToHTTPS([/localhost:(\d{4})/], [/\/insecure/], 301));
+
+app.use(express.static(path.join(__dirname, 'client/build')));
+
+
 
 io.on("connection", socket => {
     counter = counter + 1;
