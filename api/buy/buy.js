@@ -106,6 +106,7 @@ module.exports = socket => (data, fn) => {
                             });
 
                             socket.emit("update", { msg: "Seller contacted!", disabled: false });
+                            socket.emit("paid");
                         })
                         .catch(e => console.error(e.stack));
                 });

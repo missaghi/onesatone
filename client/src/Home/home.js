@@ -130,7 +130,7 @@ render() {
           <div className={classes.heroContent}>
              <div className={classes.heroImg}></div>
             <Typography variant="h6" align="center" color="textSecondary" paragraph>
-            Sell channels to grow the Lighting Network's liquidity and stack a few SATs or buys some channels to bootstrap your netowork. 
+            Sell channels to grow the Lighting Network's liquidity and stack a few SATs, or buy channels to bootstrap your network inbound liquidity. 
             </Typography>
                 <div className={classes.heroButtons}>
                 <Grid container spacing={16} justify="center">

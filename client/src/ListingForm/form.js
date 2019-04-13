@@ -74,7 +74,7 @@ class Form extends React.Component {
        id="alias"
        name="alias"
           variant="outlined"
-       label="Enter your node alias" 
+       label="Alias" 
        fullWidth
        helperText={touched.alias ? errors.alias : "Basically a title for your listing"}
        error={touched.alias && Boolean(errors.alias)}
@@ -85,9 +85,9 @@ class Form extends React.Component {
        id="node"
        name="node"
           variant="outlined"
-       label="Enter your Node Address (pubkey, no IP or Port)" 
+       label="Node Address" 
        fullWidth
-       helperText={touched.node ? errors.node : "Node Address"}
+       helperText={touched.node ? errors.node : "Node Address (pubkey, no IP or Port)"}
        error={touched.node && Boolean(errors.node)}
        value={node}
        onChange={this.change.bind(null, "node")}
