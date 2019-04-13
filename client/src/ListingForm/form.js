@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
-import Typography from '@material-ui/core/Typography';
-import Offers from "./offers";
-import socket from "../socket"
+import MenuItem from '@material-ui/core/MenuItem';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import socket from "../socket";
 
 const styles = theme => ({
   container: {
@@ -25,6 +25,17 @@ const styles = theme => ({
   fab : { marginBottom:30},
 });
 
+const channelsizes = [
+  {label:"Select Channel Size"},
+  {label:"50,000", value:"50000"},
+  {label:"100,000", value:"100000"},
+  {label:"500,000", value:"500000"},
+  {label:"1,000,000", value:"1000000"},
+  {label:"2,000,000", value:"2000000"},
+  {label:"3,000,000", value:"3000000"},
+  {label:"4,000,000", value:"4000000"},
+]
+
 class Form extends React.Component {
   constructor(props) {
     super(props);
@@ -38,6 +49,7 @@ class Form extends React.Component {
 
   change = (name, e) => { 
     e.persist();  
+    console.log(e);
     this.props.handleChange(e);
     this.props.setFieldTouched(name, true, false);
   };
@@ -45,7 +57,7 @@ class Form extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const  { values : { alias, nodeID, email, offers },
+    const  { values : { alias, node, email, chansize, fee },
             errors,
             touched,
             handleSubmit, 
@@ -70,15 +82,15 @@ class Form extends React.Component {
        onChange={this.change.bind(null, "alias")}
      />
      <TextField  className={classes.inputs}
-       id="nodeID"
-       name="nodeID"
+       id="node"
+       name="node"
           variant="outlined"
-       label="Enter your Node Address" 
+       label="Enter your Node Address (pubkey, no IP or Port)" 
        fullWidth
-       helperText={touched.nodeID ? errors.nodeID : "just the ID before the @ sign, no IP or port"}
-       error={touched.nodeID && Boolean(errors.nodeID)}
-       value={nodeID}
-       onChange={this.change.bind(null, "nodeID")}
+       helperText={touched.node ? errors.node : "Node Address"}
+       error={touched.node && Boolean(errors.node)}
+       value={node}
+       onChange={this.change.bind(null, "node")}
      />
      <TextField  className={classes.inputs}
        id="email"
@@ -92,15 +104,46 @@ class Form extends React.Component {
        onChange={this.change.bind(null, "email")}
      />
 
-    <Typography component="h2" variant="h6" align="left">
-    Add the channels you are willing to open</Typography>
+<TextField 
+      id="chansize"
+      select
+      variant="outlined"
+      label="Channel Size"
+      className={classes.inputs}
+      fullWidth
+      value={chansize}
+      onChange={this.change.bind(null, "chansize")} 
+      InputProps={{
+            startAdornment: <InputAdornment position="start">SAT</InputAdornment>,
+          }}
+      SelectProps={{
+        native: true,
+        MenuProps: {
+          className: classes.menu,
+        },
+      }}  
+    >
+      {channelsizes.map(option => (
+        <option  key={option.value || 0} value={option.value}> 
+          {option.label}
+        </option>
+      ))}
+      </TextField>
+    
+    <TextField
+      id="fee"  className={classes.inputs}
+      name="fee"
+      label="Your Fee"
+      value={fee}
+      onChange={this.change.bind(null, "fee")} 
+      helperText="Suggested 10% of the Size"
+      variant="outlined"
+      fullWidth
+      InputProps={{
+            startAdornment: <InputAdornment position="start">SAT</InputAdornment>,
+          }}
+    /> 
 
-     <Offers {...this.props} offerChange={(arroffers) => {
-       var newvalues = this.props.values;
-       newvalues.offers = arroffers;
-       console.log(arroffers);
-       this.props.setValues(newvalues); 
-       }} /> 
      <Button
        type="submit"
        fullWidth
@@ -110,7 +153,7 @@ class Form extends React.Component {
      >
        {this.state.button.msg}
      </Button>
-     <p>Listing fee is the sum of your channel fees, in case we need to refund a buyer.</p>
+     <p>Listing fee is one channel fee, in case we need to refund a buyer.</p>
    </form>
 );
 }

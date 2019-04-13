@@ -4,6 +4,7 @@ import withStyles from "@material-ui/core/styles/withStyles";
 
 import { Formik } from "formik";
 import Form from "./form";
+import AlertDialog from "./thankyou";
 
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Paper from "@material-ui/core/Paper";
@@ -51,33 +52,34 @@ const styles = theme => ({
 });
 
 const validationSchema = Yup.object({
-  nodeID: Yup.string("Enter a node").required("Node is required"),
+  node: Yup.string("Enter a node").required("Node is required").min(66,"pubkey's are usually 66 charachters long").max(66, "Seems too long, try to trim everything after the @ sign."),
   alias: Yup.string("Enter an alias").required("Give your node a name, something unique"),
+  fee: Yup.number("Enter a fee").required("Like 10% of the channel?"),
+  chansize: Yup.number("Select a channel size").required("However much you want offer"),
   email: Yup.string("Enter your email")
     .email("Enter a valid email")
-    .required("Email is required"),
-  offers: Yup.array()
-    .max(1, "Sorry only 1 offer supported right now")
-    .required("One offer required")
+    .required("Email is required")
 });
 
 class ListingForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      open:false,
       invoice: { invoice: "", img: "" },
       paid: false,
       copied: false,
     };
-    socket.on("Paid", data => {
-      console.log(data);
-      this.setState({ paid: data });
-    });
+    socket.on("listed", data => {
+      console.log("Listed");
+      this.setState({open:true});
+    }); 
   }
 
-  handleSubmit = vals => {
+  handleClose = () => { this.setState({open:false}); }
 
-    socket.emit("/api/list", vals, (invoice) => {
+  handleSubmit = vals => { 
+   socket.emit("/api/list", vals, (invoice) => {
       if (invoice.error) {
         console.log(invoice.error);
       }
@@ -88,22 +90,24 @@ class ListingForm extends React.Component {
         });
       }
     }) 
-
   };
 
   render() {
     const { classes } = this.props;
     const values = {
-      nodeID: "",
+      node: "",
       alias: "",
       email: "",
-      offers: [{ size: 100000, fee: 10000 }]
+      fee: 10000,
+      chansize: undefined,
     };
 
     return (
       <React.Fragment>
         <CssBaseline />
         
+        <AlertDialog open={this.state.open} close={this.handleClose}></AlertDialog>
+
         <h1 className={classes.h1}> List your node </h1>
         <main className={classes.layout}>
           <Paper className={classes.paper}>

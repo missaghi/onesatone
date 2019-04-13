@@ -2,27 +2,8 @@ var fs = require('fs');
 var crypto = require('crypto');
 var common = {};
 
-common.lnd_server_url = process.env.LNDURL;
-common.node_auth_type = 'DEFAULT';
-common.macaroon_path = '';
 common.secret_key = crypto.randomBytes(64).toString('hex');
-common.options = {};
-
-common.setOptions = () => {
-	//var macaroon = fs.readFileSync(common.macaroon_path + '/invoice.macaroon').toString('hex');
-	common.options = {
-		url: '',
-		rejectUnauthorized: false,
-		json: true,
-		headers: {
-			'Grpc-Metadata-macaroon': process.env.MACAROON,
-		},
-		form: ''
-	};
-	return common.options;
-}
-
-
+ 
 common.convertToBTC = (num) => {
 	return (num / 100000000).toFixed(6);
 };
