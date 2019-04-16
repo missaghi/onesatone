@@ -114,20 +114,22 @@ class Buy extends React.Component {
             </div>
             {invoice.invoice.length > 0 ? (
               <div>
-                <div>
-                  <img src={invoice.img} />
-                </div>
+
                 <CopyToClipboard
                   text={invoice.invoice}
                   onCopy={() => this.setState({ copied: true })}
                 >
-                  <span> Copy to clipboard </span>
-                </CopyToClipboard>
-                {this.state.copied ? (
+                  {this.state.copied ? (
                   <div>
                     <span style={{ color: "red" }}> Copied. </span>
                   </div>
-                ) : null}
+                ) : <span> Copy to clipboard </span> }
+                </CopyToClipboard>
+
+                <div>
+                  <img src={invoice.img} />
+                </div>
+                
               </div>
             ) : (
                 <div> </div>

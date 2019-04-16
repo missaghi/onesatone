@@ -29,7 +29,7 @@ class AlertDialog extends React.Component {
               </DialogContentText>
 
               <center><Button onClick={this.handleClose} color="primary">
-                <a  target="_blank" href="https://twitter.com/intent/tweet?text=I just bought some inbound liquidity for my lighning node using www.GlowSAT.com">Tweet it posthaste</a>
+                <a  target="_blank" href="https://twitter.com/intent/tweet?text=I just bought some inbound liquidity for my lightning node using www.GlowSAT.com @glowSAT">Tweet it posthaste</a>
               </Button> </center>
 
             </DialogContent> 

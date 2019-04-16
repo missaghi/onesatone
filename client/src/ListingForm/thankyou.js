@@ -34,7 +34,7 @@ class AlertDialog extends React.Component {
             </DialogContent> 
             <DialogActions>
             <Button onClick={this.handleClose} color="primary" variant="outlined">
-                <a target="_blank" href="https://twitter.com/intent/tweet?text=I just listed an offer to sell liquidity using www.GlowSAT.com">Let Bitcoin Twitter know</a>
+                <a target="_blank" href="https://twitter.com/intent/tweet?text=I just listed an offer to sell liquidity using www.GlowSAT.com @GlowSAT">Let Bitcoin Twitter know</a>
               </Button>
                <Button onClick={this.handleClose} color="primary" variant="outlined">
                 <a href="#/browse">Browse all listings</a>
