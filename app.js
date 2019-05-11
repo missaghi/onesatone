@@ -1,9 +1,9 @@
 var express = require('express');
 var path = require('path');
 
-const timber = require('timber');
-const transport = new timber.transports.HTTPS(process.env.TIMBER);
-timber.install(transport);
+//const timber = require('timber');
+//const transport = new timber.transports.HTTPS(process.env.TIMBER);
+//timber.install(transport);
 
 var app = express();
 var server = require('http').Server(app);
