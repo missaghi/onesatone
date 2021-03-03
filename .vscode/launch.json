@@ -6,9 +6,14 @@
     "configurations": [
         {
             "type": "node",
-            "request": "launch",
-            "name": "Launch Program",
-            "program": "${workspaceFolder}\\bin\\www"
+            "request": "attach",
+            "name": "Heroku",
+           // "program": "${workspaceFolder}\\bin\\www",
+            "address": "localhost",
+            "port": 9229,
+            "protocol": "inspector",
+            "localRoot": "${workspaceFolder}",
+            "remoteRoot": "/"
         }
     ]
 }
