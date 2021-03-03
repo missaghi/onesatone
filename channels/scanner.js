@@ -41,7 +41,7 @@ module.exports = () => {
 
         }
 
-        console.log("heartbeat" + new Date().toString() + " " + updates.length + " Since last update");
+        //console.log("heartbeat" + new Date().toString() + " " + updates.length + " Since last update");
         var temp = [];
         while (updates.length > 0) {
             temp.push(updates.pop());

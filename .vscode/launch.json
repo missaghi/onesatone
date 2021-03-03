@@ -24,8 +24,7 @@
             "request": "launch",
             "name": "Local",
             "program": "${workspaceFolder}\\bin\\www", 
-            "console": "integratedTerminal",
-            
+            "console": "integratedTerminal"
         }
     ]
 }
