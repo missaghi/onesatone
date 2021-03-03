@@ -1,24 +1,27 @@
 var node = "";
 var light = () => {
 
-  if (node == "") {
+    if (node == "") {
 
-    var grpc = require('grpc');
-    var fs = require('fs');
-    var lnrpc = grpc.load('./rpc.proto').lnrpc;
-    process.env.GRPC_SSL_CIPHER_SUITES = 'HIGH+ECDSA'
-    var lndCert = fs.readFileSync('./tls.cert');
-    var sslCreds = grpc.credentials.createSsl(lndCert);
-    var macaroonCreds = grpc.credentials.createFromMetadataGenerator(function (args, callback) {
-      var macaroon = process.env.MACAROON;
-      var metadata = new grpc.Metadata()
-      metadata.add('macaroon', macaroon);
-      callback(null, metadata);
-    });
-    var creds = grpc.credentials.combineChannelCredentials(sslCreds, macaroonCreds);
-    node = new lnrpc.Lightning(process.env.LNDURL, creds);
-  }
-  return node;
+        var LndGrpc = require('lnd-grpc');
+        var fs = require('fs');
+        var lnrpc = new LndGrpc(options);
+
+        node = new LndGrpc({
+            host: process.env.LNDURL,
+            cert: null,
+            macaroon: process.env.MACAROON,
+            waitForMacaroon: 30 * 1000, // 30 seconds
+            waitForCert: true,
+            protoDir: './rpc.proto', // useful when running in electron environment, for example
+        })
+
+        await node.connect()
+
+    }
+
+    return node;
+
 }
 
 
