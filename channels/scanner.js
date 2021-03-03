@@ -17,22 +17,24 @@ module.exports = () => {
 
     var updates = [];
 
-    function subscribe() {
+    async function subscribe() {
 
         if (!listening) {
 
             listening = true;
 
-            var call = lightning().subscribeChannelGraph({});
-            call.on('data', function (response) {
+            var call = await lightning();
+            const { Lightning, Autopilot, Invoices } = call.services
+            await Lightning.subscribeChannelGraph({});
+            call.on('data', function(response) {
                 // A response was received from the server.
                 updates = updates.concat(response.channel_updates);
             });
-            call.on('status', function (status) {
+            call.on('status', function(status) {
                 // The current status of the stream.
                 console.log("Status:" + JSON.stringify(status));
             });
-            call.on('end', function () {
+            call.on('end', function() {
                 listening = false;
                 subscribe();
             });
@@ -41,7 +43,7 @@ module.exports = () => {
 
         console.log("heartbeat" + new Date().toString() + " " + updates.length + " Since last update");
         var temp = [];
-        while (updates.length>0) {
+        while (updates.length > 0) {
             temp.push(updates.pop());
         }
         if (temp.length > 0) {
@@ -53,20 +55,19 @@ module.exports = () => {
 
     function CheckForMatchingPendingChannels(ChannelEdgeUpdates) {
 
-        const query = 'select id, node, listingnode, listingid, chansize from buy ' + 
-        ' where paid is not null and channelid is null';
+        const query = 'select id, node, listingnode, listingid, chansize from buy ' +
+            ' where paid is not null and channelid is null';
 
         pool.query(query, (error, dbresult) => {
             if (error) {
                 console.error(error);
-            } else { 
-                Array.from(dbresult.rows).forEach(r=> {
+            } else {
+                Array.from(dbresult.rows).forEach(r => {
 
-                   ChannelEdgeUpdates.forEach(c=> {
+                    ChannelEdgeUpdates.forEach(c => {
 
-                        if (c.advertising_node == r.listingnode.split("@")[0] && 
-                            c.connecting_node == r.node.split("@")[0]  )
-                        {
+                        if (c.advertising_node == r.listingnode.split("@")[0] &&
+                            c.connecting_node == r.node.split("@")[0]) {
                             pool.query({ text: "update buy set channelid = $1, chansize = $3 where id = $2", values: [c.chan_id, r.id, c.capacity] });
                             pool.query({ text: "update listing set sales = sales + 1, chanopenpending = null where id = $1", values: [r.listingid] });
                         }
@@ -74,7 +75,7 @@ module.exports = () => {
                     })
 
                 })
-                     
+
             }
         });
     }
