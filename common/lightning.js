@@ -16,7 +16,7 @@ var light = () => {
             protoDir: './rpc.proto', // useful when running in electron environment, for example
         })
 
-        await node.connect()
+        node.connect()
 
     }
 
