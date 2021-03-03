@@ -1,1 +1,1 @@
-web: --inspect=9229 node ./bin/www
+web: node ./bin/www
