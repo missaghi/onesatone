@@ -1,1 +1,1 @@
-web: node ./bin/www
+web: --inspect node ./bin/www
