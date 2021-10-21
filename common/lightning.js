@@ -2,7 +2,7 @@ var node = "";
 var light = async() => {
     console.info("lightning RPC accessed", node)
     if (node == "") {
-
+        console.info("lightning RPC connecting" )
         var LndGrpc = require('lnd-grpc');
 
         node = new LndGrpc({
@@ -11,7 +11,7 @@ var light = async() => {
         })
 
         await node.connect();
-        console.info("lightning RPC created", node)
+        console.info("lightning RPC created", node.services)
 
     }
 

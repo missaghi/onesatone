@@ -7,7 +7,8 @@ module.exports = socket => (data, fn) => {
 
     socket.emit("update", { msg: "fetching invoice", disabled: true });
     //get invoice 
-    lightning().addInvoice({
+     
+    await lightning().addInvoice({
         //memo: "listing node", //req.body.memo,
         value: data.fee
     }, (err, body) => {
