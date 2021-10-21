@@ -14,7 +14,7 @@ var light = async() => {
 
     }
 
-    return node;
+    return node.services.Lightning;
 
 }
 

@@ -9,7 +9,7 @@ module.exports = socket => (data, fn) => {
 
     socket.emit("update", { msg: "fetching invoice", disabled: true });
     //get invoice 
-    lightning().AddInvoice({
+    lightning().addInvoice({
         value: 10000
     }, (err, body) => {
         if (err) {
@@ -73,7 +73,7 @@ module.exports = socket => (data, fn) => {
             settle_index: 0,
         };
 
-        var call = lightning().SubscribeInvoices(ops);
+        var call = lightning().subscribeInvoices(ops);
         call.on('data', function (response) {
             // A response was received from the server.
             console.info('settled' + response.settled + ' ' + response.settle_index);
