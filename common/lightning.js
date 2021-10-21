@@ -11,7 +11,7 @@ var light = async() => {
         })
 
         await node.connect();
-        console.info("lightning RPC accessed", node)
+        console.info("lightning RPC created", node)
 
     }
 
