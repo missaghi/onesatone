@@ -5,8 +5,8 @@ var node = new LndGrpc({
     waitForCert: true,
 });
 var light = async() => {
-    console.info("lightning RPC accessed", node)
-    if (node == "") {
+    console.info("lightning RPC accessed", node.state)
+    if (node.state == "disconnected") {
         console.info("lightning RPC connecting" ) 
 
         
