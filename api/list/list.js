@@ -3,7 +3,7 @@ var named = require("yesql").pg;
 const qrcode = require("qrcode");
 var lightning = require("../../common/lightning");
 
-module.exports = socket => (data, fn) => {
+module.exports = socket => async(data, fn) => {
 
     socket.emit("update", { msg: "fetching invoice", disabled: true });
     //get invoice 
