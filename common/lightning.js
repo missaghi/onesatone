@@ -6,7 +6,7 @@ var grpc = new LndGrpc({
 });
 var light = async() => {
     console.info("lightning RPC accessed", grpc.state)
-    if (grpc.state == "disconnected") {
+    if (grpc.state == "ready") {
         console.info("lightning RPC connecting" )  
 
         await grpc.connect()
@@ -22,6 +22,7 @@ var light = async() => {
 
         // Check if the wallet is locked and unlock if needed.
         if (grpc.state === 'locked') {
+            console.log('wallet is locked!')
         const { WalletUnlocker } = grpc.services
         await WalletUnlocker.unlockWallet({
             wallet_password: Buffer.from('mypassword'),
